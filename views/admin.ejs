@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .messages-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .messages-table th,
+        .messages-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .messages-table th {
+            background: #2c3e50;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .messages-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-unread {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .status-read {
+            background: #3498db;
+            color: white;
+        }
+        
+        .status-replied {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .status-spam {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .message-preview {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .filter-bar {
+            margin: 1rem 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: #ecf0f1;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .messages-table {
+                font-size: 0.875rem;
+            }
+            
+            .messages-table th,
+            .messages-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('layouts/navbar', { activePage: 'admin' }) %>
+    
+    <div class="container">
+        <h1>Contact Messages Dashboard</h1>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number"><%= stats.total || 0 %></div>
+                <div class="stat-label">Total Messages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><%= stats.unread || 0 %></div>
+                <div class="stat-label">Unread</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><%= stats.read || 0 %></div>
+                <div class="stat-label">Read</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><%= stats.replied || 0 %></div>
+                <div class="stat-label">Replied</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><%= stats.spam || 0 %></div>
+                <div class="stat-label">Spam</div>
+            </div>
+        </div>
+        
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">All Messages</button>
+            <button class="filter-btn" data-filter="unread">Unread</button>
+            <button class="filter-btn" data-filter="read">Read</button>
+            <button class="filter-btn" data-filter="replied">Replied</button>
+            <button class="filter-btn" data-filter="spam">Spam</button>
+        </div>
+        
+        <table class="messages-table" id="messagesTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% messages.forEach(msg => { %>
+                <tr data-status="<%= msg.status %>">
+                    <td><%= msg.id %></td>
+                    <td><%= new Date(msg.createdAt).toLocaleString() %></td>
+                    <td><%= msg.name %></td>
+                    <td><%= msg.email %></td>
+                    <td class="message-preview" title="<%= msg.message %>">
+                        <%= msg.message.substring(0, 100) %><%= msg.message.length > 100 ? '...' : '' %>
+                    </td>
+                    <td>
+                        <span class="status-badge status-<%= msg.status %>">
+                            <%= msg.status %>
+                        </span>
+                    </td>
+                    <td><%= msg.ipAddress || 'N/A' %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    
+    <%- include('partials/footer') %>
+    
+    <script>
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const tableRows = document.querySelectorAll('#messagesTable tbody tr');
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                
+                // Filter rows
+                tableRows.forEach(row => {
+                    if (filter === 'all') {
+                        row.style.display = '';
+                    } else {
+                        const status = row.dataset.status;
+                        if (status === filter) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Include Navbar -->
+    <%- include('layouts/navbar', { activePage: 'home' }) %>
+    
+    <div class="container">
+        <div class="hero">
+            <h1>Welcome to My Portfolio</h1>
+            <p>I'm a passionate web developer creating amazing digital experiences</p>
+            <a href="/contact" class="btn btn-primary">Get In Touch</a>
+        </div>
+
+        <section>
+            <h2>Featured Projects</h2>
+            <div class="projects">
+                <div class="project-card">
+                    <h3>Project 1</h3>
+                    <p>A modern web application built with React and Node.js</p>
+                    <div class="project-tech">
+                        <span>React</span>
+                        <span>Node.js</span>
+                        <span>MongoDB</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>Project 2</h3>
+                    <p>Responsive e-commerce platform with payment integration</p>
+                    <div class="project-tech">
+                        <span>Vue.js</span>
+                        <span>Express</span>
+                        <span>PostgreSQL</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>Project 3</h3>
+                    <p>Real-time chat application using WebSocket technology</p>
+                    <div class="project-tech">
+                        <span>Socket.io</span>
+                        <span>Express</span>
+                        <span>Redis</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Include Footer -->
+    <%- include('partials/footer') %>
+</body>
+</html>

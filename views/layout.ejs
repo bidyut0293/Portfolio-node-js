@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Global Styles for Fixed Layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Fixed Header */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Fixed Footer */
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #2c3e50;
+            color: white;
+            z-index: 1000;
+        }
+        
+        /* Main Content Area - Scrollable */
+        .main-content {
+            margin-top: 80px; /* Height of fixed header */
+            margin-bottom: 200px; /* Height of fixed footer */
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-top: 60px;
+                margin-bottom: 250px;
+                padding: 1rem;
+            }
+        }
+        
+        /* Scrollbar Styling */
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .main-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <div class="fixed-header">
+        <nav>
+            <div class="nav-container">
+                <div class="logo">
+                    <a href="#" onclick="loadPage('home'); return false;">My Portfolio</a>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-menu" id="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" onclick="loadPage('home'); return false;" class="nav-link" data-page="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="loadPage('about'); return false;" class="nav-link" data-page="about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="loadPage('contact'); return false;" class="nav-link" data-page="contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- Scrollable Main Content -->
+    <main class="main-content">
+        <div class="container" id="content-area">
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+            
+            <!-- Dynamic Content Will Load Here -->
+            <div id="dynamic-content"></div>
+        </div>
+    </main>
+    
+    <!-- Fixed Footer -->
+    <div class="fixed-footer">
+        <footer>
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>My Portfolio</h3>
+                        <p>Creating amazing digital experiences through code and design.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="#" onclick="loadPage('home'); return false;">Home</a></li>
+                            <li><a href="#" onclick="loadPage('about'); return false;">About</a></li>
+                            <li><a href="#" onclick="loadPage('contact'); return false;">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Connect</h3>
+                        <div class="social-links">
+                            <a href="#" target="_blank">GitHub</a>
+                            <a href="#" target="_blank">LinkedIn</a>
+                            <a href="#" target="_blank">Twitter</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; <%= currentYear %> My Portfolio. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // Current active page
+        let currentPage = 'home';
+        
+        // Load page content dynamically
+        async function loadPage(page) {
+            if (currentPage === page) return;
+            
+            currentPage = page;
+            
+            // Update active class in navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.dataset.page === page) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Update page title
+            document.title = page === 'home' ? 'My Portfolio' : 
+                            page === 'about' ? 'About - My Portfolio' : 
+                            'Contact - My Portfolio';
+            
+            // Show loading spinner
+            const spinner = document.getElementById('loadingSpinner');
+            const contentDiv = document.getElementById('dynamic-content');
+            spinner.style.display = 'block';
+            contentDiv.style.opacity = '0';
+            
+            try {
+                // Fetch content from API
+                const response = await fetch(`/api/content/${page}`);
+                const data = await response.json();
+                
+                // Update content with fade effect
+                setTimeout(() => {
+                    contentDiv.innerHTML = data.content;
+                    contentDiv.style.opacity = '1';
+                    spinner.style.display = 'none';
+                    
+                    // Scroll to top smoothly
+                    document.querySelector('.main-content').scrollTop = 0;
+                    
+                    // If contact page, initialize form handlers
+                    if (page === 'contact') {
+                        initializeContactForm();
+                    }
+                    
+                    // Update URL without reload
+                    history.pushState({ page: page }, '', `/${page === 'home' ? '' : page}`);
+                }, 300);
+                
+            } catch (error) {
+                console.error('Error loading page:', error);
+                contentDiv.innerHTML = '<div class="error-container"><h1>Error</h1><p>Failed to load content. Please try again.</p></div>';
+                contentDiv.style.opacity = '1';
+                spinner.style.display = 'none';
+            }
+        }
+        
+        // Initialize contact form handlers
+        function initializeContactForm() {
+            const form = document.getElementById('contactForm');
+            if (!form) return;
+            
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const messageInput = document.getElementById('message');
+            const submitBtn = document.getElementById('submitBtn');
+            const charCount = document.getElementById('charCount');
+            const formMessage = document.getElementById('formMessage');
+            
+            // Character counter
+            if (messageInput) {
+                messageInput.addEventListener('input', function() {
+                    const count = this.value.length;
+                    charCount.textContent = `${count} / 1000 characters`;
+                    if (count > 1000) {
+                        charCount.style.color = '#e74c3c';
+                    } else {
+                        charCount.style.color = '#666';
+                    }
+                });
+            }
+            
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                
+                const formData = {
+                    name: nameInput.value,
+                    email: emailInput.value,
+                    message: messageInput.value
+                };
+                
+                submitBtn.textContent = 'Sending...';
+                submitBtn.disabled = true;
+                
+                try {
+                    const response = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        formMessage.style.display = 'block';
+                        formMessage.innerHTML = `
+                            <div class="success-message">
+                                ✅ ${result.message}<br>
+                                Reference ID: ${result.contactId}
+                            </div>
+                        `;
+                        form.reset();
+                        if (charCount) charCount.textContent = '0 / 1000 characters';
+                        
+                        // Auto hide after 5 seconds
+                        setTimeout(() => {
+                            formMessage.style.display = 'none';
+                        }, 5000);
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } catch (error) {
+                    formMessage.style.display = 'block';
+                    formMessage.innerHTML = `
+                        <div class="error-message-box">
+                            ❌ Error: ${error.message}
+                        </div>
+                    `;
+                    
+                    setTimeout(() => {
+                        formMessage.style.display = 'none';
+                    }, 5000);
+                } finally {
+                    submitBtn.textContent = 'Send Message';
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+        
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.page) {
+                loadPage(event.state.page);
+            } else {
+                const path = window.location.pathname;
+                if (path === '/' || path === '') {
+                    loadPage('home');
+                } else if (path === '/about') {
+                    loadPage('about');
+                } else if (path === '/contact') {
+                    loadPage('contact');
+                }
+            }
+        });
+        
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+            
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+        }
+        
+        // Load initial page based on URL
+        const initialPath = window.location.pathname;
+        if (initialPath === '/about') {
+            loadPage('about');
+        } else if (initialPath === '/contact') {
+            loadPage('contact');
+        } else {
+            loadPage('home');
+        }
+    </script>
+</body>
+</html>

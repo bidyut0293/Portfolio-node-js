@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .profile {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+        }
+        
+        .skill-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .skill-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 1.5rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 2px solid white;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <%- include('layouts/navbar', { activePage: 'about' }) %>
+    
+    <div class="container">
+        <h1>About Me</h1>
+        
+        <div class="profile">
+            <img src="/images/profile-placeholder.jpg" alt="Profile Picture" class="profile-img">
+            <h2>John Doe</h2>
+            <p>Full Stack Developer & UI/UX Enthusiast</p>
+        </div>
+
+        <section>
+            <h2>Who I Am</h2>
+            <p>I'm a passionate web developer with over 5 years of experience in creating beautiful, responsive, and user-friendly websites. With a strong foundation in modern web technologies, I bring ideas to life through clean code and creative design solutions.</p>
+            <p>My journey in web development started when I built my first website in college. Since then, I've worked with startups, agencies, and enterprises to deliver high-quality digital products that solve real-world problems.</p>
+        </section>
+
+        <section>
+            <h2>Skills & Technologies</h2>
+            <div class="skills-grid">
+                <span class="skill-item">HTML5/CSS3</span>
+                <span class="skill-item">JavaScript/ES6+</span>
+                <span class="skill-item">React.js</span>
+                <span class="skill-item">Vue.js</span>
+                <span class="skill-item">Node.js</span>
+                <span class="skill-item">Express.js</span>
+                <span class="skill-item">PostgreSQL</span>
+                <span class="skill-item">MongoDB</span>
+                <span class="skill-item">Git & GitHub</span>
+                <span class="skill-item">Docker</span>
+                <span class="skill-item">AWS</span>
+                <span class="skill-item">RESTful APIs</span>
+            </div>
+        </section>
+
+        <section>
+            <h2>Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2022 - Present</div>
+                    <div class="timeline-title">Senior Web Developer - Tech Company</div>
+                    <p>Leading frontend development team, architecting scalable solutions, and mentoring junior developers. Implemented microservices architecture and improved application performance by 40%.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2020 - 2022</div>
+                    <div class="timeline-title">Frontend Developer - Startup</div>
+                    <p>Built responsive web applications, collaborated with designers, and optimized for maximum speed and scalability. Reduced page load time by 50%.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2018 - 2020</div>
+                    <div class="timeline-title">Junior Web Developer - Agency</div>
+                    <p>Developed and maintained client websites, implemented SEO best practices, and ensured cross-browser compatibility.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Education</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2014 - 2018</div>
+                    <div class="timeline-title">Bachelor of Science in Computer Science</div>
+                    <p>University of Technology - Graduated with Honors</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <%- include('partials/footer') %>
+</body>
+</html>
